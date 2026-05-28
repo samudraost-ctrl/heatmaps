@@ -41,11 +41,6 @@ document.querySelectorAll(
 ".pair-card"
 );
 
-const tfButtons =
-document.querySelectorAll(
-".tf-btn"
-);
-
 let activePair =
 "EURUSD";
 
@@ -66,23 +61,6 @@ clickSound.volume = 0.4;
 clickSound.play();
 
 }
-
-window.addEventListener(
-"click",
-() => {
-
-const music =
-document.getElementById(
-"bgMusic"
-);
-
-music.volume = 0.35;
-
-music.play();
-
-},
-{ once:true }
-);
 
 async function getForexPrice(pair){
 
@@ -345,30 +323,6 @@ renderMarket();
 
 });
 
-tfButtons.forEach(btn => {
-
-btn.addEventListener(
-"click",
-() => {
-
-tfButtons.forEach(b => {
-
-b.classList.remove(
-"active-tf"
-);
-
-});
-
-btn.classList.add(
-"active-tf"
-);
-
-playClick();
-
-});
-
-});
-
 document.getElementById(
 "analyzeBtn"
 ).addEventListener(
@@ -404,6 +358,57 @@ putArea.toFixed(2);
 
 }
 );
+
+const menuBtn =
+document.getElementById(
+"menuBtn"
+);
+
+const dropdownMenu =
+document.querySelector(
+".dropdown-menu"
+);
+
+menuBtn.addEventListener(
+"click",
+() => {
+
+playClick();
+
+if(
+dropdownMenu.style.display
+=== "flex"
+){
+
+dropdownMenu.style.display =
+"none";
+
+}else{
+
+dropdownMenu.style.display =
+"flex";
+
+}
+
+}
+);
+
+window.addEventListener(
+"click",
+(e) => {
+
+if(
+!menuBtn.contains(e.target)
+&&
+!dropdownMenu.contains(e.target)
+){
+
+dropdownMenu.style.display =
+"none";
+
+}
+
+});
 
 renderMarket();
 
