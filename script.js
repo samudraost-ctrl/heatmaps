@@ -371,9 +371,7 @@ document.querySelector(
 
 menuBtn.addEventListener(
 "click",
-(e) => {
-
-e.stopPropagation();
+() => {
 
 playClick();
 
