@@ -1,23 +1,10 @@
 const symbols = {
 
 XAUUSD:"XAU/USD",
-
 EURUSD:"EUR/USD",
 GBPUSD:"GBP/USD",
 USDJPY:"USD/JPY",
-AUDUSD:"AUD/USD",
-NZDUSD:"NZD/USD",
-USDCAD:"USD/CAD",
-USDCHF:"USD/CHF",
-
-EURJPY:"EUR/JPY",
-GBPJPY:"GBP/JPY",
-AUDJPY:"AUD/JPY",
-
-XAGUSD:"XAG/USD",
-
-BTCUSD:"BTC/USD",
-ETHUSD:"ETH/USD"
+AUDUSD:"AUD/USD"
 
 };
 
@@ -70,11 +57,15 @@ await fetch(
 const data =
 await response.json();
 
+if(data.price){
+
 return Number(data.price);
 
-}catch(error){
+}
 
-console.log(error);
+return null;
+
+}catch{
 
 return null;
 
@@ -98,9 +89,7 @@ await response.json();
 
 return Number(data.price);
 
-}catch(error){
-
-console.log(error);
+}catch{
 
 return null;
 
@@ -132,7 +121,7 @@ symbols[activePair]
 
 }
 
-function createBigOrderHeatmap(price){
+function createHeatmap(price){
 
 const levels = [];
 
@@ -155,16 +144,6 @@ for(let i=-3;i<=3;i++){
 const strike =
 price + (i * step);
 
-const call =
-Math.floor(
-Math.random()*40+60
-);
-
-const put =
-Math.floor(
-Math.random()*40+60
-);
-
 levels.push({
 
 strike:
@@ -172,8 +151,15 @@ price > 1000
 ? strike.toFixed(2)
 : strike.toFixed(4),
 
-call,
-put
+call:
+Math.floor(
+Math.random()*40+60
+),
+
+put:
+Math.floor(
+Math.random()*40+60
+)
 
 });
 
@@ -200,7 +186,7 @@ return;
 }
 
 const levels =
-createBigOrderHeatmap(
+createHeatmap(
 livePrice
 );
 
@@ -333,6 +319,40 @@ sentimentEl.style.color =
 }
 
 }
+
+document.getElementById(
+"analyzeBtn"
+).addEventListener(
+"click",
+() => {
+
+const price =
+Number(
+document.getElementById(
+"manualPrice"
+).value
+);
+
+if(!price) return;
+
+const callArea =
+price + (price * 0.003);
+
+const putArea =
+price - (price * 0.003);
+
+document.getElementById(
+"callArea"
+).innerText =
+callArea.toFixed(2);
+
+document.getElementById(
+"putArea"
+).innerText =
+putArea.toFixed(2);
+
+}
+);
 
 const menuBtn =
 document.getElementById(
