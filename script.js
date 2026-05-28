@@ -1,12 +1,20 @@
 const symbols = {
 
+XAUUSD:"XAU/USD",
+
 EURUSD:"EUR/USD",
 GBPUSD:"GBP/USD",
 USDJPY:"USD/JPY",
 AUDUSD:"AUD/USD",
 NZDUSD:"NZD/USD",
+USDCAD:"USD/CAD",
+USDCHF:"USD/CHF",
 
-XAUUSD:"XAU/USD",
+EURJPY:"EUR/JPY",
+GBPJPY:"GBP/JPY",
+AUDJPY:"AUD/JPY",
+
+XAGUSD:"XAG/USD",
 
 BTCUSD:"BTC/USD",
 ETHUSD:"ETH/USD"
@@ -20,21 +28,33 @@ ETHUSD:"ETHUSDT"
 
 };
 
-const pairCards =
-document.querySelectorAll(
-".pair-card"
-);
+let activePair =
+"XAUUSD";
+
+const apiKey =
+"2e17930862544ff2a98735e8bac44bdf";
 
 const heatmapRows =
 document.getElementById(
 "heatmapRows"
 );
 
-let activePair =
-"EURUSD";
+const pairSelect =
+document.getElementById(
+"pairSelect"
+);
 
-const apiKey =
-"2e17930862544ff2a98735e8bac44bdf";
+pairSelect.addEventListener(
+"change",
+() => {
+
+activePair =
+pairSelect.value;
+
+renderMarket();
+
+}
+);
 
 async function getForexPrice(pair){
 
@@ -52,7 +72,9 @@ await response.json();
 
 return Number(data.price);
 
-}catch{
+}catch(error){
+
+console.log(error);
 
 return null;
 
@@ -76,7 +98,9 @@ await response.json();
 
 return Number(data.price);
 
-}catch{
+}catch(error){
+
+console.log(error);
 
 return null;
 
@@ -116,11 +140,13 @@ let step;
 
 if(price > 1000){
 
-step = price * 0.0015;
+step =
+price * 0.0015;
 
 }else{
 
-step = price * 0.0008;
+step =
+price * 0.0008;
 
 }
 
@@ -308,30 +334,54 @@ sentimentEl.style.color =
 
 }
 
-pairCards.forEach(card => {
+const menuBtn =
+document.getElementById(
+"menuBtn"
+);
 
-card.addEventListener(
+const dropdownMenu =
+document.querySelector(
+".dropdown-menu"
+);
+
+menuBtn.addEventListener(
 "click",
-() => {
+(e) => {
 
-pairCards.forEach(c => {
+e.stopPropagation();
 
-c.classList.remove(
-"active"
+if(
+dropdownMenu.style.display
+=== "flex"
+){
+
+dropdownMenu.style.display =
+"none";
+
+}else{
+
+dropdownMenu.style.display =
+"flex";
+
+}
+
+}
 );
 
-});
+window.addEventListener(
+"click",
+(e) => {
 
-card.classList.add(
-"active"
-);
+if(
+!menuBtn.contains(e.target)
+&&
+!dropdownMenu.contains(e.target)
+){
 
-activePair =
-card.innerText;
+dropdownMenu.style.display =
+"none";
 
-renderMarket();
-
-});
+}
 
 });
 
