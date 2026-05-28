@@ -1,28 +1,80 @@
-const symbols = {
+const marketData = {
 
-  EURUSD: "FX:EURUSD",
-  GBPUSD: "FX:GBPUSD",
-  USDJPY: "FX:USDJPY",
-  AUDUSD: "FX:AUDUSD",
-  NZDUSD: "FX:NZDUSD",
-  USDCAD: "FX:USDCAD",
-  USDCHF: "FX:USDCHF",
+  EURUSD: {
+    price: 1.0874
+  },
 
-  EURJPY: "FX:EURJPY",
-  GBPJPY: "FX:GBPJPY",
-  AUDJPY: "FX:AUDJPY",
+  GBPUSD: {
+    price: 1.2740
+  },
 
-  XAUUSD: "OANDA:XAUUSD",
-  XAGUSD: "OANDA:XAGUSD",
+  USDJPY: {
+    price: 156.40
+  },
 
-  BTCUSD: "BINANCE:BTCUSDT",
-  ETHUSD: "BINANCE:ETHUSDT",
-  SOLUSD: "BINANCE:SOLUSDT",
-  XRPUSD: "BINANCE:XRPUSDT",
+  AUDUSD: {
+    price: 0.6612
+  },
 
-  NAS100: "FOREXCOM:NAS100",
-  US30: "FOREXCOM:US30",
-  SPX500: "FOREXCOM:SPX500"
+  NZDUSD: {
+    price: 0.6124
+  },
+
+  USDCAD: {
+    price: 1.3710
+  },
+
+  USDCHF: {
+    price: 0.9030
+  },
+
+  EURJPY: {
+    price: 170.10
+  },
+
+  GBPJPY: {
+    price: 199.42
+  },
+
+  AUDJPY: {
+    price: 103.20
+  },
+
+  XAUUSD: {
+    price: 4376
+  },
+
+  XAGUSD: {
+    price: 32.44
+  },
+
+  BTCUSD: {
+    price: 68420
+  },
+
+  ETHUSD: {
+    price: 3820
+  },
+
+  SOLUSD: {
+    price: 172
+  },
+
+  XRPUSD: {
+    price: 0.52
+  },
+
+  NAS100: {
+    price: 19422
+  },
+
+  US30: {
+    price: 39210
+  },
+
+  SPX500: {
+    price: 5322
+  }
 
 };
 
@@ -33,43 +85,6 @@ const pairCards =
 document.querySelectorAll(".pair-card");
 
 let activePair = "EURUSD";
-
-async function getRealtimePrice(symbol){
-
-  try{
-
-    const response = await fetch(
-      "https://scanner.tradingview.com/global/scan",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          symbols: {
-            tickers: [symbol],
-            query: { types: [] }
-          },
-          columns: [
-            "close"
-          ]
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    return data.data[0].d[0];
-
-  }catch(error){
-
-    console.log(error);
-
-    return null;
-
-  }
-
-}
 
 function generateHeatmap(price){
 
@@ -93,7 +108,8 @@ function generateHeatmap(price){
 
   for(let i = -4; i <= 4; i++){
 
-    const strike = price + (i * step);
+    const strike =
+    price + (i * step);
 
     rows.push({
 
@@ -120,7 +136,13 @@ function generateHeatmap(price){
 
 }
 
-function renderHeatmap(rows, price){
+function renderMarket(){
+
+  const price =
+  marketData[activePair].price;
+
+  const rows =
+  generateHeatmap(price);
 
   heatmapRows.innerHTML = "";
 
@@ -170,26 +192,26 @@ function renderHeatmap(rows, price){
   document.getElementById(
     "callVolume"
   ).innerText =
-  totalCall.toFixed(0) + "K";
+  totalCall + "K";
 
   document.getElementById(
     "putVolume"
   ).innerText =
-  totalPut.toFixed(0) + "K";
+  totalPut + "K";
 
   if(price > 1000){
 
     document.getElementById(
       "livePrice"
     ).innerText =
-    Number(price).toFixed(2);
+    price.toFixed(2);
 
   }else{
 
     document.getElementById(
       "livePrice"
     ).innerText =
-    Number(price).toFixed(4);
+    price.toFixed(4);
 
   }
 
@@ -218,25 +240,40 @@ function renderHeatmap(rows, price){
 
 }
 
-async function updateMarket(){
+function updateRealtime(){
 
-  const symbol =
-  symbols[activePair];
+  const current =
+  marketData[activePair];
 
-  const price =
-  await getRealtimePrice(symbol);
+  let move;
 
-  if(!price) return;
+  if(activePair.includes("BTC")){
 
-  const heatmap =
-  generateHeatmap(
-    Number(price)
-  );
+    move =
+    (Math.random() - 0.5) * 300;
 
-  renderHeatmap(
-    heatmap,
-    price
-  );
+  }else if(activePair.includes("XAU")){
+
+    move =
+    (Math.random() - 0.5) * 10;
+
+  }else if(activePair.includes("NAS")
+  || activePair.includes("US30")
+  || activePair.includes("SPX")){
+
+    move =
+    (Math.random() - 0.5) * 50;
+
+  }else{
+
+    move =
+    (Math.random() - 0.5) * 0.01;
+
+  }
+
+  current.price += move;
+
+  renderMarket();
 
 }
 
@@ -255,16 +292,16 @@ pairCards.forEach(card => {
     activePair =
     card.innerText;
 
-    updateMarket();
+    renderMarket();
 
   });
 
 });
 
-updateMarket();
+renderMarket();
 
 setInterval(() => {
 
-  updateMarket();
+  updateRealtime();
 
-}, 5000);
+}, 2500);
