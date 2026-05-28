@@ -36,7 +36,11 @@ rel="stylesheet">
 <div class="logo-box">
 
 <div class="logo">
-SFX
+
+<img
+src="logo.png"
+alt="SFX Logo">
+
 </div>
 
 <div>
@@ -93,24 +97,67 @@ target="_blank">
 
 </header>
 
-<section class="top-bar">
+<section class="pair-dropdown-wrap">
 
-<div class="pair-card active">EURUSD</div>
-<div class="pair-card">GBPUSD</div>
-<div class="pair-card">USDJPY</div>
-<div class="pair-card">AUDUSD</div>
-<div class="pair-card">NZDUSD</div>
-<div class="pair-card">USDCAD</div>
-<div class="pair-card">USDCHF</div>
-<div class="pair-card">EURJPY</div>
-<div class="pair-card">GBPJPY</div>
-<div class="pair-card">AUDJPY</div>
-<div class="pair-card">XAUUSD</div>
-<div class="pair-card">XAGUSD</div>
-<div class="pair-card">BTCUSD</div>
-<div class="pair-card">ETHUSD</div>
-<div class="pair-card">SOLUSD</div>
-<div class="pair-card">XRPUSD</div>
+<select id="pairSelect">
+
+<option value="XAUUSD">
+XAUUSD
+</option>
+
+<option value="EURUSD">
+EURUSD
+</option>
+
+<option value="GBPUSD">
+GBPUSD
+</option>
+
+<option value="USDJPY">
+USDJPY
+</option>
+
+<option value="AUDUSD">
+AUDUSD
+</option>
+
+<option value="NZDUSD">
+NZDUSD
+</option>
+
+<option value="USDCAD">
+USDCAD
+</option>
+
+<option value="USDCHF">
+USDCHF
+</option>
+
+<option value="EURJPY">
+EURJPY
+</option>
+
+<option value="GBPJPY">
+GBPJPY
+</option>
+
+<option value="AUDJPY">
+AUDJPY
+</option>
+
+<option value="XAGUSD">
+XAGUSD
+</option>
+
+<option value="BTCUSD">
+BTCUSD
+</option>
+
+<option value="ETHUSD">
+ETHUSD
+</option>
+
+</select>
 
 </section>
 
@@ -163,21 +210,6 @@ Loading...
 </h2>
 
 </div>
-
-</section>
-
-<section class="analysis-box">
-
-<input
-type="number"
-id="manualPrice"
-placeholder="Enter Current Price">
-
-<button id="analyzeBtn">
-
-ANALYZE AREA
-
-</button>
 
 </section>
 
