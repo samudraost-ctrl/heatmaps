@@ -1,497 +1,387 @@
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+const marketData = {
+
+EURUSD:{price:1.0874},
+GBPUSD:{price:1.2740},
+USDJPY:{price:156.40},
+AUDUSD:{price:0.6612},
+NZDUSD:{price:0.6124},
+USDCAD:{price:1.3710},
+USDCHF:{price:0.9030},
+EURJPY:{price:170.10},
+GBPJPY:{price:199.42},
+AUDJPY:{price:103.20},
+XAUUSD:{price:4376},
+XAGUSD:{price:32.44},
+BTCUSD:{price:68420},
+ETHUSD:{price:3820},
+SOLUSD:{price:172},
+XRPUSD:{price:0.52},
+NAS100:{price:19422},
+US30:{price:39210},
+SPX500:{price:5322}
+
+};
+
+const heatmapRows =
+document.getElementById(
+"heatmapRows"
+);
+
+const pairCards =
+document.querySelectorAll(
+".pair-card"
+);
+
+const tfButtons =
+document.querySelectorAll(
+".tf-btn"
+);
+
+let activePair =
+"EURUSD";
+
+const clickSound =
+new Audio(
+"https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"
+);
+
+function playClick(){
+
+clickSound.currentTime = 0;
+
+clickSound.volume = 0.4;
+
+clickSound.play();
+
 }
 
-body{
+window.addEventListener(
+"click",
+() => {
 
-background:
-linear-gradient(
-rgba(0,0,0,0.75),
-rgba(0,0,0,0.82)
+const music =
+document.getElementById(
+"bgMusic"
+);
+
+music.volume = 0.35;
+
+music.play();
+
+},
+{ once:true }
+);
+
+function generateHeatmap(price){
+
+const rows = [];
+
+let step;
+
+if(price > 50000){
+
+step = price * 0.003;
+
+}else if(price > 1000){
+
+step = price * 0.002;
+
+}else{
+
+step = price * 0.001;
+
+}
+
+for(let i=-4;i<=4;i++){
+
+const strike =
+price + (i * step);
+
+rows.push({
+
+strike:
+price > 1000
+? strike.toFixed(0)
+: strike.toFixed(4),
+
+call:
+Math.floor(
+Math.random()*90+10
 ),
-url("1000031163.jpg");
 
-background-size:cover;
-background-position:center;
-background-attachment:fixed;
+put:
+Math.floor(
+Math.random()*90+10
+)
 
-color:white;
-font-family:'Inter',sans-serif;
-padding:30px;
-overflow-x:hidden;
+});
 
 }
 
-.overlay{
+return rows;
 
-position:fixed;
-inset:0;
+}
 
-background:
-radial-gradient(
-circle at top left,
-rgba(0,255,150,0.15),
-transparent 40%
-),
+function renderMarket(){
 
-radial-gradient(
-circle at bottom right,
-rgba(255,0,80,0.15),
-transparent 40%
+const price =
+marketData[
+activePair
+].price;
+
+const rows =
+generateHeatmap(price);
+
+heatmapRows.innerHTML = "";
+
+let totalCall = 0;
+let totalPut = 0;
+
+rows.forEach(level => {
+
+totalCall += level.call;
+totalPut += level.put;
+
+const row =
+document.createElement("div");
+
+row.classList.add(
+"heatmap-row"
 );
 
-z-index:-1;
+row.innerHTML = `
+
+<div>
+${level.strike}
+</div>
+
+<div class="bar">
+
+<div
+class="fill-call"
+style="width:${level.call}%">
+</div>
+
+</div>
+
+<div class="bar">
+
+<div
+class="fill-put"
+style="width:${level.put}%">
+</div>
+
+</div>
+
+`;
+
+heatmapRows.appendChild(row);
+
+});
+
+document.getElementById(
+"callVolume"
+).innerText =
+totalCall + "K";
+
+document.getElementById(
+"putVolume"
+).innerText =
+totalPut + "K";
+
+if(price > 1000){
+
+document.getElementById(
+"livePrice"
+).innerText =
+price.toFixed(2);
+
+}else{
+
+document.getElementById(
+"livePrice"
+).innerText =
+price.toFixed(4);
 
 }
 
-header{
+const sentiment =
+totalCall > totalPut
+? "Bullish"
+: "Bearish";
 
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:30px;
-
-}
-
-.logo-box{
-
-display:flex;
-align-items:center;
-gap:15px;
-
-}
-
-.logo{
-
-width:60px;
-height:60px;
-
-border-radius:18px;
-
-background:
-linear-gradient(
-135deg,
-#00ff95,
-#00bfff
+const sentimentEl =
+document.querySelector(
+".bullish"
 );
 
-display:flex;
-justify-content:center;
-align-items:center;
+sentimentEl.innerText =
+sentiment;
 
-font-weight:800;
-color:black;
+if(sentiment === "Bullish"){
 
-}
+sentimentEl.style.color =
+"#00ff95";
 
-.market-open{
+}else{
 
-background:
-rgba(255,255,255,0.05);
-
-border:
-1px solid rgba(255,255,255,0.08);
-
-padding:14px 20px;
-
-border-radius:16px;
-
-display:flex;
-align-items:center;
-gap:10px;
-
-backdrop-filter:blur(10px);
+sentimentEl.style.color =
+"#ff3366";
 
 }
 
-.dot{
+}
 
-width:10px;
-height:10px;
+function updateRealtime(){
 
-border-radius:50%;
+const current =
+marketData[
+activePair
+];
 
-background:#00ff95;
+let move;
+
+if(activePair.includes(
+"BTC"
+)){
+
+move =
+(Math.random()-0.5)
+* 300;
+
+}else if(activePair.includes(
+"XAU"
+)){
+
+move =
+(Math.random()-0.5)
+* 10;
+
+}else if(
+activePair.includes(
+"NAS"
+)
+||
+activePair.includes(
+"US30"
+)
+||
+activePair.includes(
+"SPX"
+)
+){
+
+move =
+(Math.random()-0.5)
+* 50;
+
+}else{
+
+move =
+(Math.random()-0.5)
+* 0.01;
 
 }
 
-.top-bar{
+current.price += move;
 
-display:flex;
-gap:14px;
-
-overflow-x:auto;
-
-padding-bottom:10px;
-
-margin-bottom:25px;
+renderMarket();
 
 }
 
-.top-bar::-webkit-scrollbar{
-display:none;
-}
+pairCards.forEach(card => {
 
-.pair-card{
+card.addEventListener(
+"click",
+() => {
 
-min-width:120px;
+pairCards.forEach(c => {
 
-background:
-rgba(255,255,255,0.05);
-
-border:
-1px solid rgba(255,255,255,0.08);
-
-padding:14px 18px;
-
-border-radius:16px;
-
-cursor:pointer;
-
-text-align:center;
-
-transition:0.3s;
-
-backdrop-filter:blur(10px);
-
-}
-
-.pair-card:hover{
-
-transform:translateY(-4px);
-
-}
-
-.active{
-
-background:
-linear-gradient(
-135deg,
-#00ff95,
-#00bfff
+c.classList.remove(
+"active"
 );
 
-color:black;
-font-weight:700;
+});
 
-}
-
-.timeframe-box{
-
-display:flex;
-gap:12px;
-
-margin-bottom:25px;
-
-}
-
-.tf-btn{
-
-padding:12px 22px;
-
-background:
-rgba(255,255,255,0.05);
-
-border:
-1px solid rgba(255,255,255,0.08);
-
-border-radius:14px;
-
-cursor:pointer;
-
-transition:0.3s;
-
-backdrop-filter:blur(10px);
-
-}
-
-.tf-btn:hover{
-
-transform:translateY(-4px);
-
-}
-
-.active-tf{
-
-background:
-linear-gradient(
-135deg,
-#00ff95,
-#00bfff
+card.classList.add(
+"active"
 );
 
-color:black;
-font-weight:700;
+activePair =
+card.innerText;
 
-}
+playClick();
 
-.stats-grid{
+renderMarket();
 
-display:grid;
+});
 
-grid-template-columns:
-repeat(auto-fit,minmax(220px,1fr));
+});
 
-gap:20px;
+tfButtons.forEach(btn => {
 
-margin-bottom:25px;
+btn.addEventListener(
+"click",
+() => {
 
-}
+tfButtons.forEach(b => {
 
-.stat-box{
-
-background:
-rgba(255,255,255,0.04);
-
-border:
-1px solid rgba(255,255,255,0.08);
-
-border-radius:24px;
-
-padding:24px;
-
-backdrop-filter:blur(10px);
-
-}
-
-.stat-box h3{
-
-color:#9ca3af;
-
-margin-bottom:10px;
-
-}
-
-.stat-box h2{
-
-font-size:34px;
-font-weight:800;
-
-}
-
-.bullish{
-color:#00ff95;
-}
-
-.analysis-box{
-
-display:flex;
-gap:16px;
-
-margin-bottom:20px;
-
-}
-
-.analysis-box input{
-
-flex:1;
-
-background:
-rgba(255,255,255,0.05);
-
-border:none;
-
-outline:none;
-
-padding:18px;
-
-border-radius:18px;
-
-color:white;
-
-font-size:16px;
-
-backdrop-filter:blur(10px);
-
-}
-
-.analysis-box button{
-
-background:
-linear-gradient(
-135deg,
-#00ff95,
-#00bfff
+b.classList.remove(
+"active-tf"
 );
 
-border:none;
+});
 
-padding:18px 28px;
-
-border-radius:18px;
-
-font-weight:700;
-
-cursor:pointer;
-
-transition:0.3s;
-
-}
-
-.analysis-box button:hover{
-
-transform:scale(1.03);
-
-}
-
-.result-box{
-
-display:grid;
-
-grid-template-columns:
-repeat(auto-fit,minmax(240px,1fr));
-
-gap:20px;
-
-margin-bottom:25px;
-
-}
-
-.result-card{
-
-background:
-rgba(255,255,255,0.04);
-
-border:
-1px solid rgba(255,255,255,0.08);
-
-border-radius:22px;
-
-padding:24px;
-
-backdrop-filter:blur(10px);
-
-}
-
-.result-card h3{
-
-color:#9ca3af;
-margin-bottom:12px;
-
-}
-
-.result-card h2{
-
-font-size:34px;
-font-weight:800;
-
-}
-
-.heatmap-box{
-
-background:
-rgba(255,255,255,0.04);
-
-border:
-1px solid rgba(255,255,255,0.08);
-
-border-radius:24px;
-
-overflow:hidden;
-
-backdrop-filter:blur(10px);
-
-}
-
-.heatmap-header{
-
-display:grid;
-
-grid-template-columns:
-1fr 2fr 2fr;
-
-padding:20px;
-
-background:
-rgba(255,255,255,0.05);
-
-font-weight:700;
-
-}
-
-.heatmap-row{
-
-display:grid;
-
-grid-template-columns:
-1fr 2fr 2fr;
-
-align-items:center;
-
-padding:18px 20px;
-
-border-top:
-1px solid rgba(255,255,255,0.05);
-
-}
-
-.bar{
-
-height:22px;
-
-background:
-rgba(255,255,255,0.05);
-
-border-radius:999px;
-
-overflow:hidden;
-
-}
-
-.fill-call{
-
-height:100%;
-
-background:
-linear-gradient(
-90deg,
-#00ff95,
-#00c3ff
+btn.classList.add(
+"active-tf"
 );
 
-}
+playClick();
 
-.fill-put{
+});
 
-height:100%;
+});
 
-background:
-linear-gradient(
-90deg,
-#ff3366,
-#ff0033
+document.getElementById(
+"analyzeBtn"
+).addEventListener(
+"click",
+() => {
+
+playClick();
+
+const price =
+Number(
+document.getElementById(
+"manualPrice"
+).value
 );
 
-}
+if(!price) return;
 
-@media(max-width:768px){
+const callArea =
+price + (price * 0.003);
 
-body{
-padding:20px;
-}
+const putArea =
+price - (price * 0.003);
 
-header{
+document.getElementById(
+"callArea"
+).innerText =
+callArea.toFixed(2);
 
-flex-direction:column;
-align-items:flex-start;
-gap:20px;
-
-}
-
-.analysis-box{
-
-flex-direction:column;
+document.getElementById(
+"putArea"
+).innerText =
+putArea.toFixed(2);
 
 }
+);
 
-.heatmap-header,
-.heatmap-row{
+renderMarket();
 
-grid-template-columns:1fr;
-gap:14px;
+setInterval(() => {
 
-}
+updateRealtime();
 
-}
+},2500);
