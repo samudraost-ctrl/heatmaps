@@ -66,24 +66,29 @@ gap:15px;
 
 .logo{
 
-width:60px;
-height:60px;
+width:56px;
+height:56px;
 
-border-radius:18px;
+min-width:56px;
+min-height:56px;
 
-background:
-linear-gradient(
-135deg,
-#00ff95,
-#00bfff
-);
+border-radius:16px;
 
-display:flex;
-justify-content:center;
-align-items:center;
+overflow:hidden;
 
-font-weight:800;
-color:black;
+box-shadow:
+0 10px 30px rgba(0,255,149,0.25);
+
+}
+
+.logo img{
+
+width:100%;
+height:100%;
+
+object-fit:cover;
+
+display:block;
 
 }
 
@@ -550,6 +555,16 @@ align-items:flex-start;
 
 }
 
+.logo{
+
+width:50px;
+height:50px;
+
+min-width:50px;
+min-height:50px;
+
+}
+
 .logo-box{
 
 width:100%;
@@ -633,16 +648,29 @@ padding:14px;
 
 .logo{
 
-width:52px;
-height:52px;
+width:46px;
+height:46px;
 
-font-size:14px;
+min-width:46px;
+min-height:46px;
+
+}
+
+.logo-box{
+
+gap:12px;
 
 }
 
 .logo-box h1{
 
-font-size:20px;
+font-size:19px;
+
+}
+
+.logo-box p{
+
+font-size:12px;
 
 }
 
