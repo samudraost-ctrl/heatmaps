@@ -5,40 +5,29 @@ GBPUSD:"GBP/USD",
 USDJPY:"USD/JPY",
 AUDUSD:"AUD/USD",
 NZDUSD:"NZD/USD",
-USDCAD:"USD/CAD",
-USDCHF:"USD/CHF",
-
-EURJPY:"EUR/JPY",
-GBPJPY:"GBP/JPY",
-AUDJPY:"AUD/JPY",
 
 XAUUSD:"XAU/USD",
-XAGUSD:"XAG/USD",
 
 BTCUSD:"BTC/USD",
-ETHUSD:"ETH/USD",
-SOLUSD:"SOL/USD",
-XRPUSD:"XRP/USD"
+ETHUSD:"ETH/USD"
 
 };
 
 const cryptoSymbols = {
 
 BTCUSD:"BTCUSDT",
-ETHUSD:"ETHUSDT",
-SOLUSD:"SOLUSDT",
-XRPUSD:"XRPUSDT"
+ETHUSD:"ETHUSDT"
 
 };
-
-const heatmapRows =
-document.getElementById(
-"heatmapRows"
-);
 
 const pairCards =
 document.querySelectorAll(
 ".pair-card"
+);
+
+const heatmapRows =
+document.getElementById(
+"heatmapRows"
 );
 
 let activePair =
@@ -46,21 +35,6 @@ let activePair =
 
 const apiKey =
 "2e17930862544ff2a98735e8bac44bdf";
-
-const clickSound =
-new Audio(
-"https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"
-);
-
-function playClick(){
-
-clickSound.currentTime = 0;
-
-clickSound.volume = 0.4;
-
-clickSound.play();
-
-}
 
 async function getForexPrice(pair){
 
@@ -78,9 +52,7 @@ await response.json();
 
 return Number(data.price);
 
-}catch(error){
-
-console.log(error);
+}catch{
 
 return null;
 
@@ -104,9 +76,7 @@ await response.json();
 
 return Number(data.price);
 
-}catch(error){
-
-console.log(error);
+}catch{
 
 return null;
 
@@ -138,74 +108,110 @@ symbols[activePair]
 
 }
 
-function generateHeatmap(price){
+function createBigOrderHeatmap(price){
 
-const rows = [];
+const levels = [];
 
 let step;
 
 if(price > 1000){
 
-step = price * 0.002;
+step = price * 0.0015;
 
 }else{
 
-step = price * 0.001;
+step = price * 0.0008;
 
 }
 
-for(let i=-4;i<=4;i++){
+for(let i=-3;i<=3;i++){
 
 const strike =
 price + (i * step);
 
-rows.push({
+const call =
+Math.floor(
+Math.random()*40+60
+);
+
+const put =
+Math.floor(
+Math.random()*40+60
+);
+
+levels.push({
 
 strike:
 price > 1000
 ? strike.toFixed(2)
 : strike.toFixed(4),
 
-call:
-Math.floor(
-Math.random()*90+10
-),
-
-put:
-Math.floor(
-Math.random()*90+10
-)
+call,
+put
 
 });
 
 }
 
-return rows;
+return levels;
 
 }
 
 async function renderMarket(){
 
-const price =
+const livePrice =
 await getLivePrice();
 
-if(!price) return;
+if(!livePrice){
 
-const rows =
-generateHeatmap(price);
+document.getElementById(
+"livePrice"
+).innerText =
+"Offline";
+
+return;
+
+}
+
+const levels =
+createBigOrderHeatmap(
+livePrice
+);
 
 heatmapRows.innerHTML = "";
 
-let totalCall = 0;
-let totalPut = 0;
+let strongestCall =
+levels[0];
 
-rows.forEach(level => {
+let strongestPut =
+levels[0];
 
-totalCall += level.call;
-totalPut += level.put;
+levels.forEach(level => {
+
+if(
+level.call >
+strongestCall.call
+){
+
+strongestCall =
+level;
+
+}
+
+if(
+level.put >
+strongestPut.put
+){
+
+strongestPut =
+level;
+
+}
 
 const row =
-document.createElement("div");
+document.createElement(
+"div"
+);
 
 row.classList.add(
 "heatmap-row"
@@ -221,7 +227,9 @@ ${level.strike}
 
 <div
 class="fill-call"
-style="width:${level.call}%">
+style="
+width:${level.call}%;
+">
 </div>
 
 </div>
@@ -230,45 +238,51 @@ style="width:${level.call}%">
 
 <div
 class="fill-put"
-style="width:${level.put}%">
+style="
+width:${level.put}%;
+">
 </div>
 
 </div>
 
 `;
 
-heatmapRows.appendChild(row);
+heatmapRows.appendChild(
+row
+);
 
 });
 
 document.getElementById(
+"livePrice"
+).innerText =
+livePrice > 1000
+? livePrice.toFixed(2)
+: livePrice.toFixed(4);
+
+document.getElementById(
 "callVolume"
 ).innerText =
-totalCall + "K";
+strongestCall.call + "K";
 
 document.getElementById(
 "putVolume"
 ).innerText =
-totalPut + "K";
-
-if(price > 1000){
+strongestPut.put + "K";
 
 document.getElementById(
-"livePrice"
+"callArea"
 ).innerText =
-price.toFixed(2);
-
-}else{
+strongestCall.strike;
 
 document.getElementById(
-"livePrice"
+"putArea"
 ).innerText =
-price.toFixed(4);
-
-}
+strongestPut.strike;
 
 const sentiment =
-totalCall > totalPut
+strongestCall.call >
+strongestPut.put
 ? "Bullish"
 : "Bearish";
 
@@ -315,100 +329,9 @@ card.classList.add(
 activePair =
 card.innerText;
 
-playClick();
-
 renderMarket();
 
 });
-
-});
-
-document.getElementById(
-"analyzeBtn"
-).addEventListener(
-"click",
-() => {
-
-playClick();
-
-const price =
-Number(
-document.getElementById(
-"manualPrice"
-).value
-);
-
-if(!price) return;
-
-const callArea =
-price + (price * 0.003);
-
-const putArea =
-price - (price * 0.003);
-
-document.getElementById(
-"callArea"
-).innerText =
-callArea.toFixed(2);
-
-document.getElementById(
-"putArea"
-).innerText =
-putArea.toFixed(2);
-
-}
-);
-
-const menuBtn =
-document.getElementById(
-"menuBtn"
-);
-
-const dropdownMenu =
-document.querySelector(
-".dropdown-menu"
-);
-
-menuBtn.addEventListener(
-"click",
-(e) => {
-
-e.stopPropagation();
-
-playClick();
-
-if(
-dropdownMenu.style.display
-=== "flex"
-){
-
-dropdownMenu.style.display =
-"none";
-
-}else{
-
-dropdownMenu.style.display =
-"flex";
-
-}
-
-}
-);
-
-window.addEventListener(
-"click",
-(e) => {
-
-if(
-!menuBtn.contains(e.target)
-&&
-!dropdownMenu.contains(e.target)
-){
-
-dropdownMenu.style.display =
-"none";
-
-}
 
 });
 
@@ -418,4 +341,4 @@ setInterval(() => {
 
 renderMarket();
 
-},5000);
+},4000);
