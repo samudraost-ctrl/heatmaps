@@ -4,230 +4,90 @@
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<title>SFX HEATMAP</title>
 
-<title>
-SFX HEATMAP
-</title>
+<link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet"
-href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
-
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-rel="stylesheet">
+<script src="https://s3.tradingview.com/tv.js"></script>
 
 </head>
 
 <body>
 
-<div class="overlay"></div>
+<div class="sidebar">
 
-<header>
+    <div class="logo">
+        SFX
+    </div>
 
-<div class="logo-box">
-
-<div class="logo">
-
-<img
-src="logo.png"
-alt="SFX Logo">
-
-</div>
-
-<div>
-
-<h1>
-SFX HEATMAP
-</h1>
-
-<p>
-Institutional Options Flow
-</p>
+    <a href="#">Dashboard</a>
+    <a href="#">Heatmap</a>
+    <a href="#">Forex</a>
+    <a href="#">Crypto</a>
+    <a href="#">Signals</a>
 
 </div>
 
-</div>
+<div class="main">
 
-<div class="menu-container">
+    <div class="topbar">
 
-<button id="menuBtn">
+        <div class="market-live">
+            LIVE MARKET
+        </div>
 
-HOME ☰
+        <button class="premium-btn">
+            PREMIUM
+        </button>
 
-</button>
+    </div>
 
-<div class="dropdown-menu">
+    <div class="grid-layout">
 
-<a
-href="https://www.forexfactory.com/calendar"
-target="_blank">
+        <div class="chart-box">
 
-📅 Economic Calendar
+            <div id="tradingview_chart"></div>
 
-</a>
+        </div>
 
-<a
-href="https://t.me/sfxacademic19"
-target="_blank">
+        <div class="market-panel">
 
-👥 Join Community
+            <div class="pair-card active">
+                EUR/USD
+            </div>
 
-</a>
+            <div class="pair-card">
+                BTC/USD
+            </div>
 
-<a
-href="https://sfxspace.id/"
-target="_blank">
+            <div class="pair-card">
+                XAU/USD
+            </div>
 
-💎 Trakteer Support
+            <div class="pair-card">
+                SOL/USD
+            </div>
 
-</a>
+        </div>
 
-</div>
+    </div>
 
-</div>
+    <div class="heatmap-box">
 
-</header>
+        <iframe
+            src="https://www.tradingview.com/heatmap/crypto/"
+            frameborder="0">
+        </iframe>
 
-<section class="top-bar">
-
-<div class="pair-card active">EURUSD</div>
-<div class="pair-card">GBPUSD</div>
-<div class="pair-card">USDJPY</div>
-<div class="pair-card">AUDUSD</div>
-<div class="pair-card">NZDUSD</div>
-<div class="pair-card">USDCAD</div>
-<div class="pair-card">USDCHF</div>
-<div class="pair-card">EURJPY</div>
-<div class="pair-card">GBPJPY</div>
-<div class="pair-card">AUDJPY</div>
-<div class="pair-card">XAUUSD</div>
-<div class="pair-card">XAGUSD</div>
-<div class="pair-card">BTCUSD</div>
-<div class="pair-card">ETHUSD</div>
-<div class="pair-card">SOLUSD</div>
-<div class="pair-card">XRPUSD</div>
-
-</section>
-
-<section class="stats-grid">
-
-<div class="stat-box">
-
-<h3>
-CALL VOLUME
-</h3>
-
-<h2 id="callVolume">
-0K
-</h2>
+    </div>
 
 </div>
 
-<div class="stat-box">
-
-<h3>
-PUT VOLUME
-</h3>
-
-<h2 id="putVolume">
-0K
-</h2>
-
-</div>
-
-<div class="stat-box">
-
-<h3>
-SENTIMENT
-</h3>
-
-<h2 class="bullish">
-Bullish
-</h2>
-
-</div>
-
-<div class="stat-box">
-
-<h3>
-LIVE PRICE
-</h3>
-
-<h2 id="livePrice">
-Loading...
-</h2>
-
-</div>
-
-</section>
-
-<section class="analysis-box">
-
-<input
-type="number"
-id="manualPrice"
-placeholder="Enter Current Price">
-
-<button id="analyzeBtn">
-
-ANALYZE AREA
-
-</button>
-
-</section>
-
-<section class="result-box">
-
-<div class="result-card">
-
-<h3>
-STRONG CALL AREA
-</h3>
-
-<h2 id="callArea">
--
-</h2>
-
-</div>
-
-<div class="result-card">
-
-<h3>
-STRONG PUT AREA
-</h3>
-
-<h2 id="putArea">
--
-</h2>
-
-</div>
-
-</section>
-
-<section class="heatmap-box">
-
-<div class="heatmap-header">
-
-<div>STRIKE</div>
-<div>CALL HEAT</div>
-<div>PUT HEAT</div>
-
-</div>
-
-<div id="heatmapRows"></div>
-
-</section>
-
-<script src="script.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
