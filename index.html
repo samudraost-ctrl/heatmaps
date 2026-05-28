@@ -3,146 +3,272 @@
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta name="viewport"
-  content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-  <title>
-    SFX Academic Heatmap
-  </title>
+<title>
+SFX HEATMAP
+</title>
 
-  <link rel="stylesheet"
-  href="style.css">
+<link rel="stylesheet"
+href="style.css">
 
-  <link rel="preconnect"
-  href="https://fonts.googleapis.com">
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
 
-  <link rel="preconnect"
-  href="https://fonts.gstatic.com"
-  crossorigin>
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-  rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="bg-glow glow1"></div>
-<div class="bg-glow glow2"></div>
+<div class="overlay"></div>
 
 <header>
 
-  <div class="logo-box">
+<div class="logo-box">
 
-    <div class="logo">
-      SFX
-    </div>
+<div class="logo">
+SFX
+</div>
 
-    <div>
+<div>
 
-      <h1>
-        CME STYLE HEATMAP
-      </h1>
+<h1>
+SFX HEATMAP
+</h1>
 
-      <p>
-        Institutional Options Flow
-      </p>
+<p>
+Institutional Options Flow
+</p>
 
-    </div>
+</div>
 
-  </div>
+</div>
 
-  <div class="market-open">
+<div class="market-open">
 
-    <span class="dot"></span>
+<span class="dot"></span>
 
-    LIVE MARKET
+LIVE MARKET
 
-  </div>
+</div>
 
 </header>
 
 <section class="top-bar">
 
-  <div class="pair-card active">EURUSD</div>
-  <div class="pair-card">GBPUSD</div>
-  <div class="pair-card">USDJPY</div>
-  <div class="pair-card">AUDUSD</div>
-  <div class="pair-card">NZDUSD</div>
-  <div class="pair-card">USDCAD</div>
-  <div class="pair-card">USDCHF</div>
-  <div class="pair-card">EURJPY</div>
-  <div class="pair-card">GBPJPY</div>
-  <div class="pair-card">AUDJPY</div>
-  <div class="pair-card">XAUUSD</div>
-  <div class="pair-card">XAGUSD</div>
-  <div class="pair-card">BTCUSD</div>
-  <div class="pair-card">ETHUSD</div>
-  <div class="pair-card">SOLUSD</div>
-  <div class="pair-card">XRPUSD</div>
-  <div class="pair-card">NAS100</div>
-  <div class="pair-card">US30</div>
-  <div class="pair-card">SPX500</div>
+<div class="pair-card active">
+EURUSD
+</div>
+
+<div class="pair-card">
+GBPUSD
+</div>
+
+<div class="pair-card">
+USDJPY
+</div>
+
+<div class="pair-card">
+AUDUSD
+</div>
+
+<div class="pair-card">
+NZDUSD
+</div>
+
+<div class="pair-card">
+USDCAD
+</div>
+
+<div class="pair-card">
+USDCHF
+</div>
+
+<div class="pair-card">
+EURJPY
+</div>
+
+<div class="pair-card">
+GBPJPY
+</div>
+
+<div class="pair-card">
+AUDJPY
+</div>
+
+<div class="pair-card">
+XAUUSD
+</div>
+
+<div class="pair-card">
+XAGUSD
+</div>
+
+<div class="pair-card">
+BTCUSD
+</div>
+
+<div class="pair-card">
+ETHUSD
+</div>
+
+<div class="pair-card">
+SOLUSD
+</div>
+
+<div class="pair-card">
+XRPUSD
+</div>
+
+<div class="pair-card">
+NAS100
+</div>
+
+<div class="pair-card">
+US30
+</div>
+
+<div class="pair-card">
+SPX500
+</div>
+
+</section>
+
+<section class="timeframe-box">
+
+<div class="tf-btn active-tf">
+H1
+</div>
+
+<div class="tf-btn">
+H4
+</div>
+
+<div class="tf-btn">
+DAILY
+</div>
+
+<div class="tf-btn">
+WEEKLY
+</div>
 
 </section>
 
 <section class="stats-grid">
 
-  <div class="stat-box">
+<div class="stat-box">
 
-    <h3>CALL VOLUME</h3>
+<h3>
+CALL VOLUME
+</h3>
 
-    <h2 id="callVolume">
-      0K
-    </h2>
+<h2 id="callVolume">
+0K
+</h2>
 
-  </div>
+</div>
 
-  <div class="stat-box">
+<div class="stat-box">
 
-    <h3>PUT VOLUME</h3>
+<h3>
+PUT VOLUME
+</h3>
 
-    <h2 id="putVolume">
-      0K
-    </h2>
+<h2 id="putVolume">
+0K
+</h2>
 
-  </div>
+</div>
 
-  <div class="stat-box">
+<div class="stat-box">
 
-    <h3>SENTIMENT</h3>
+<h3>
+SENTIMENT
+</h3>
 
-    <h2 class="bullish">
-      Bullish
-    </h2>
+<h2 class="bullish">
+Bullish
+</h2>
 
-  </div>
+</div>
 
-  <div class="stat-box">
+<div class="stat-box">
 
-    <h3>LIVE PRICE</h3>
+<h3>
+LIVE PRICE
+</h3>
 
-    <h2 id="livePrice">
-      Loading...
-    </h2>
+<h2 id="livePrice">
+Loading...
+</h2>
 
-  </div>
+</div>
+
+</section>
+
+<section class="analysis-box">
+
+<input
+type="number"
+id="manualPrice"
+placeholder="Enter Current Price">
+
+<button id="analyzeBtn">
+
+ANALYZE AREA
+
+</button>
+
+</section>
+
+<section class="result-box">
+
+<div class="result-card">
+
+<h3>
+STRONG CALL AREA
+</h3>
+
+<h2 id="callArea">
+-
+</h2>
+
+</div>
+
+<div class="result-card">
+
+<h3>
+STRONG PUT AREA
+</h3>
+
+<h2 id="putArea">
+-
+</h2>
+
+</div>
 
 </section>
 
 <section class="heatmap-box">
 
-  <div class="heatmap-header">
+<div class="heatmap-header">
 
-    <div>STRIKE</div>
-    <div>CALL HEAT</div>
-    <div>PUT HEAT</div>
+<div>STRIKE</div>
+<div>CALL HEAT</div>
+<div>PUT HEAT</div>
 
-  </div>
+</div>
 
-  <div id="heatmapRows"></div>
+<div id="heatmapRows"></div>
 
 </section>
 
