@@ -1,24 +1,33 @@
-const marketData = {
+const symbols = {
 
-EURUSD:{price:1.0874},
-GBPUSD:{price:1.2740},
-USDJPY:{price:156.40},
-AUDUSD:{price:0.6612},
-NZDUSD:{price:0.6124},
-USDCAD:{price:1.3710},
-USDCHF:{price:0.9030},
-EURJPY:{price:170.10},
-GBPJPY:{price:199.42},
-AUDJPY:{price:103.20},
-XAUUSD:{price:4376},
-XAGUSD:{price:32.44},
-BTCUSD:{price:68420},
-ETHUSD:{price:3820},
-SOLUSD:{price:172},
-XRPUSD:{price:0.52},
-NAS100:{price:19422},
-US30:{price:39210},
-SPX500:{price:5322}
+EURUSD:"EUR/USD",
+GBPUSD:"GBP/USD",
+USDJPY:"USD/JPY",
+AUDUSD:"AUD/USD",
+NZDUSD:"NZD/USD",
+USDCAD:"USD/CAD",
+USDCHF:"USD/CHF",
+
+EURJPY:"EUR/JPY",
+GBPJPY:"GBP/JPY",
+AUDJPY:"AUD/JPY",
+
+XAUUSD:"XAU/USD",
+XAGUSD:"XAG/USD",
+
+BTCUSD:"BTC/USD",
+ETHUSD:"ETH/USD",
+SOLUSD:"SOL/USD",
+XRPUSD:"XRP/USD"
+
+};
+
+const cryptoSymbols = {
+
+BTCUSD:"BTCUSDT",
+ETHUSD:"ETHUSDT",
+SOLUSD:"SOLUSDT",
+XRPUSD:"XRPUSDT"
 
 };
 
@@ -39,6 +48,9 @@ document.querySelectorAll(
 
 let activePair =
 "EURUSD";
+
+const apiKey =
+"2e17930862544ff2a98735e8bac44bdf";
 
 const clickSound =
 new Audio(
@@ -72,17 +84,89 @@ music.play();
 { once:true }
 );
 
+async function getForexPrice(pair){
+
+try{
+
+const response =
+await fetch(
+
+`https://api.twelvedata.com/price?symbol=${pair}&apikey=${apiKey}`
+
+);
+
+const data =
+await response.json();
+
+return Number(data.price);
+
+}catch(error){
+
+console.log(error);
+
+return null;
+
+}
+
+}
+
+async function getCryptoPrice(symbol){
+
+try{
+
+const response =
+await fetch(
+
+`https://api.binance.com/api/v3/ticker/price?symbol=${symbol}`
+
+);
+
+const data =
+await response.json();
+
+return Number(data.price);
+
+}catch(error){
+
+console.log(error);
+
+return null;
+
+}
+
+}
+
+async function getLivePrice(){
+
+if(
+cryptoSymbols[activePair]
+){
+
+return await getCryptoPrice(
+
+cryptoSymbols[activePair]
+
+);
+
+}else{
+
+return await getForexPrice(
+
+symbols[activePair]
+
+);
+
+}
+
+}
+
 function generateHeatmap(price){
 
 const rows = [];
 
 let step;
 
-if(price > 50000){
-
-step = price * 0.003;
-
-}else if(price > 1000){
+if(price > 1000){
 
 step = price * 0.002;
 
@@ -101,7 +185,7 @@ rows.push({
 
 strike:
 price > 1000
-? strike.toFixed(0)
+? strike.toFixed(2)
 : strike.toFixed(4),
 
 call:
@@ -122,12 +206,12 @@ return rows;
 
 }
 
-function renderMarket(){
+async function renderMarket(){
 
 const price =
-marketData[
-activePair
-].price;
+await getLivePrice();
+
+if(!price) return;
 
 const rows =
 generateHeatmap(price);
@@ -232,63 +316,6 @@ sentimentEl.style.color =
 
 }
 
-function updateRealtime(){
-
-const current =
-marketData[
-activePair
-];
-
-let move;
-
-if(activePair.includes(
-"BTC"
-)){
-
-move =
-(Math.random()-0.5)
-* 300;
-
-}else if(activePair.includes(
-"XAU"
-)){
-
-move =
-(Math.random()-0.5)
-* 10;
-
-}else if(
-activePair.includes(
-"NAS"
-)
-||
-activePair.includes(
-"US30"
-)
-||
-activePair.includes(
-"SPX"
-)
-){
-
-move =
-(Math.random()-0.5)
-* 50;
-
-}else{
-
-move =
-(Math.random()-0.5)
-* 0.01;
-
-}
-
-current.price += move;
-
-renderMarket();
-
-}
-
 pairCards.forEach(card => {
 
 card.addEventListener(
@@ -382,6 +409,6 @@ renderMarket();
 
 setInterval(() => {
 
-updateRealtime();
+renderMarket();
 
-},2500);
+},5000);
